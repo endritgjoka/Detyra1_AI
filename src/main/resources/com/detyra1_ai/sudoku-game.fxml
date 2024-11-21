@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+<VBox fx:controller="com.detyra1_ai.SudokuController" alignment="CENTER" spacing="10" xmlns:fx="http://javafx.com/fxml">
+    <children>
+        <Label text="Zgjidh nivelin:" />
+        <ComboBox fx:id="levelSelector">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="Easy" />
+                    <String fx:value="Medium" />
+                    <String fx:value="Hard" />
+                </FXCollections>
+            </items>
+        </ComboBox>
+
+        <Label text="Metoda e zgjidhjes:" />
+        <ComboBox fx:id="methodSelector">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="Backtracking" />
+                    <String fx:value="DFS" />
+                </FXCollections>
+            </items>
+        </ComboBox>
+
+        <Button text="Gjenero Sudoku" onAction="#handleGenerateButton" />
+    </children>
+</VBox>
