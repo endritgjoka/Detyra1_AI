@@ -5,7 +5,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -13,42 +14,36 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        ComboBox<String> selectionBox = new ComboBox<>();
-        selectionBox.getItems().addAll("Detyra1", "Detyra2", "Detyra3");
-        selectionBox.setPromptText("Select a task");
-
-        Button openButton = new Button("Open");
-        openButton.setDisable(true);
-
-        selectionBox.setOnAction(e -> {
-            openButton.setDisable(selectionBox.getValue() == null);
-        });
         String basePath = "/com/detyra1_ai/";
 
-        openButton.setOnAction(e -> {
-            String selectedTask = selectionBox.getValue();
-            if (selectedTask != null) {
-                switch (selectedTask) {
-                    case "Detyra1":
-                        openFXML(primaryStage, basePath+"sudoku/sudoku_game.fxml", "Detyra1");
-                        break;
-                    case "Detyra2":
-                        openFXML(primaryStage, basePath+"social_golfers/social_golfer.fxml", "Detyra2");
-                        break;
-                    case "Detyra3":
-                        openFXML(primaryStage, basePath+"latin_square/latin_square.fxml", "Detyra3");
-                        break;
-                }
-            }
-        });
+        Button buttonDetyra1 = createTaskButton("Sudoku", "sudoku_icon.png", e ->
+                openFXML(primaryStage, basePath + "sudoku/sudoku_game.fxml", "Detyra1"));
+        Button buttonDetyra2 = createTaskButton("Social Golfers", "golf_icon.png", e ->
+                openFXML(primaryStage, basePath + "social_golfers/social_golfer.fxml", "Detyra2"));
+        Button buttonDetyra3 = createTaskButton("Latin Square", "latin_square.png", e ->
+                openFXML(primaryStage, basePath + "latin_square/latin_square.fxml", "Detyra3"));
 
-        VBox layout = new VBox(10, selectionBox, openButton);
+        VBox layout = new VBox(20, buttonDetyra1, buttonDetyra2, buttonDetyra3);
         layout.setStyle("-fx-padding: 20; -fx-alignment: center;");
 
-        Scene scene = new Scene(layout, 300, 200);
+        Scene scene = new Scene(layout, 300, 250);
         primaryStage.setTitle("Select a Task");
         primaryStage.setScene(scene);
+        primaryStage.setResizable(false); // Make the window non-resizable
         primaryStage.show();
+    }
+
+
+    private Button createTaskButton(String text, String iconName, javafx.event.EventHandler<javafx.event.ActionEvent> action) {
+        ImageView icon = new ImageView(new Image(getClass().getResourceAsStream("/com/detyra1_ai/icons/" + iconName)));
+        icon.setFitWidth(20); // Set icon size
+        icon.setFitHeight(20);
+
+        Button button = new Button(text, icon);
+        button.setStyle("-fx-font-size: 14px; -fx-padding: 10;");
+        button.setOnAction(action);
+
+        return button;
     }
 
     private void openFXML(Stage primaryStage, String fxmlFile, String title) {
