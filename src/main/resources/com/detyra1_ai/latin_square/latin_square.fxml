@@ -6,9 +6,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.detyra1_ai.latin_square.LatinSquareController"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.detyra1_ai.latin_square.LatinSquareController" prefHeight="400.0" prefWidth="600.0">
+    <children>
+        <Label text="Enter n:" layoutX="20.0" layoutY="20.0"/>
+        <TextField fx:id="sizeInput" layoutX="80.0" layoutY="15.0" prefWidth="100.0"/>
+        <Button text="Generate" layoutX="200.0" layoutY="15.0" onAction="#generateLatinSquare"/>
+        <TextArea fx:id="outputArea" layoutX="20.0" layoutY="60.0" prefWidth="560.0" prefHeight="320.0" editable="false" wrapText="true"/>
+    </children>
 </AnchorPane>
