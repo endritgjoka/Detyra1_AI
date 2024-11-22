@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+<VBox fx:controller="SocialGolfersProblem.SocialGolfersController" alignment="CENTER" spacing="10" xmlns:fx="http://javafx.com/fxml">
+    <children>
+        <!-- Drop-down for algorithm selection -->
+        <ComboBox fx:id="algorithmComboBox" onAction="#handleAlgorithmSelection" promptText="Select Algorithm">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="DFS"/>
+                    <String fx:value="DLS"/>
+                </FXCollections>
+            </items>
+        </ComboBox>
+
+        <!-- Input fields for parameters -->
+        <TextField fx:id="playersField" promptText="Enter total number of players (P * G)"/>
+        <TextField fx:id="groupSizeField" promptText="Enter number of players per group (P)"/>
+
+        <!-- Depth limit field (initially hidden) -->
+        <TextField fx:id="depthLimitField" promptText="Enter depth limit" visible="false"/>
+
+        <!-- Solve button -->
+        <Button text="Solve" onAction="#handleSolveButtonClick"/>
+
+    </children>
+</VBox>
