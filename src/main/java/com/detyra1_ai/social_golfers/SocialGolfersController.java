@@ -1,7 +1,7 @@
-package SocialGolfersProblem;
+package com.detyra1_ai.social_golfers;
 
-import SocialGolfersProblem.DFS.DFSView;
-import SocialGolfersProblem.DLS.DLSView;
+import com.detyra1_ai.social_golfers.DFS.DFSView;
+import com.detyra1_ai.social_golfers.DLS.DLSView;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;

@@ -1,11 +1,9 @@
-package com.detyra1_ai;
+package com.detyra1_ai.sudoku;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -19,10 +17,8 @@ public class SudokuController {
 
     @FXML
     private ComboBox<String> levelSelector;
-
     @FXML
     private ComboBox<String> methodSelector;
-
     @FXML
     public void initialize() {
         levelSelector.setValue("Easy");
@@ -78,9 +74,11 @@ public class SudokuController {
                 gridPane.add(textField, col, row);
             }
         }
+        validateBoard();
 
         Button solveButton = new Button("Solve Sudoku");
         solveButton.setOnAction(e -> {
+            clearUserInputs();
             int[][] puzzle = getBoardFromGrid();
             boolean solved;
 
@@ -93,17 +91,75 @@ public class SudokuController {
             if (solved) {
                 updateGridWithSolution(puzzle);
             } else {
-                System.out.println("Sudoku nuk ka zgjidhje.");
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Sudoku cannot be solved.", ButtonType.OK);
+                alert.showAndWait();
             }
         });
 
+        // Check Sudoku Button
+        Button checkButton = new Button("Check Sudoku");
+        checkButton.setOnAction(e -> {
+            if (isBoardFullyFilled()) {
+                int[][] solvedBoard = getBoardFromGrid();
+                int[][] boardFromGrid = getBoardFromGrid();
+                solveSudokuWithDFS(solvedBoard);
+                printBoardInOneLine(solvedBoard);
+                printBoardInOneLine(boardFromGrid);
+                if (areBoardSame(solvedBoard, boardFromGrid)) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "The Sudoku is fully filled and valid!", ButtonType.OK);
+                    alert.showAndWait();
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "The Sudoku is fully filled but invalid.", ButtonType.OK);
+                    alert.showAndWait();
+                }
+            } else {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "The Sudoku is not fully filled.", ButtonType.OK);
+                alert.showAndWait();
+            }
+        });
+
+        Button resetButton = new Button("Reset Board");
+        resetButton.setOnAction(_ -> resetBoard());
+
+
         VBox root = new VBox(10);
         root.setAlignment(Pos.CENTER);
-        root.getChildren().addAll(gridPane, solveButton);
+        root.getChildren().addAll(gridPane, solveButton, checkButton, resetButton);
 
         Scene scene = new Scene(root, 600, 600);
         stage.setScene(scene);
         stage.show();
+    }
+
+    private void clearUserInputs() {
+        for (int row = 0; row < SIZE; row++) {
+            for (int col = 0; col < SIZE; col++) {
+                if (cells[row][col].isEditable()) {
+                    cells[row][col].clear();
+                }
+            }
+        }
+    }
+    private boolean isBoardFullyFilled() {
+        for (int row = 0; row < SIZE; row++) {
+            for (int col = 0; col < SIZE; col++) {
+                if (cells[row][col].getText().isEmpty()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean areBoardSame(int[][] board1, int[][] board2) {
+        for (int row = 0; row < SIZE; row++) {
+            for (int col = 0; col < SIZE; col++) {
+                if (board1[row][col] != board2[row][col]) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     // Retrieve board from grid
@@ -131,24 +187,16 @@ public class SudokuController {
     private int[][] generateSudoku(String level) {
         int[][] board = new int[SIZE][SIZE];
 
-        // Step 1: Generate a fully solved board using Backtracking
-        solveSudokuWithBacktracking(board);
+        // Step 1: Generate a fully solved board using randomized Backtracking
+        generateFullySolvedBoard(board);
 
         // Step 2: Determine the number of cells to remove based on the difficulty level
-        int cellsToRemove;
-        switch (level) {
-            case "Easy":
-                cellsToRemove = 30; // More filled cells
-                break;
-            case "Medium":
-                cellsToRemove = 40; // Moderate difficulty
-                break;
-            case "Hard":
-                cellsToRemove = 50; // Fewer filled cells
-                break;
-            default:
-                cellsToRemove = 30;
-        }
+        int cellsToRemove = switch (level) {
+            case "Easy" -> 30;
+            case "Medium" -> 40;
+            case "Hard" -> 50;
+            default -> 30;
+        };
 
         // Step 3: Remove numbers while ensuring the puzzle remains solvable
         while (cellsToRemove > 0) {
@@ -170,6 +218,41 @@ public class SudokuController {
         }
 
         return board;
+    }
+
+    // Generate a fully solved board with randomness
+    private void generateFullySolvedBoard(int[][] board) {
+        // Create a list of numbers 1 to 9
+        Integer[] numbers = new Integer[SIZE];
+        for (int i = 0; i < SIZE; i++) {
+            numbers[i] = i + 1;
+        }
+
+        // Shuffle the numbers to introduce randomness
+        java.util.Collections.shuffle(java.util.Arrays.asList(numbers));
+
+        fillBoardWithRandomizedBacktracking(board, 0, 0, numbers);
+    }
+
+    // Randomized Backtracking for generating a fully solved board
+    private boolean fillBoardWithRandomizedBacktracking(int[][] board, int row, int col, Integer[] numbers) {
+        if (row == SIZE) return true; // Board is fully filled
+        if (col == SIZE) return fillBoardWithRandomizedBacktracking(board, row + 1, 0, numbers);
+
+        if (board[row][col] == 0) {
+            for (int num : numbers) {
+                if (isValid(board, row, col, num)) {
+                    board[row][col] = num;
+                    if (fillBoardWithRandomizedBacktracking(board, row, col + 1, numbers)) {
+                        return true;
+                    }
+                    board[row][col] = 0; // Backtrack
+                }
+            }
+            return false;
+        }
+
+        return fillBoardWithRandomizedBacktracking(board, row, col + 1, numbers);
     }
 
 
@@ -206,7 +289,7 @@ public class SudokuController {
                                 return true;
                             }
 
-                            board[row][col] = 0; // Backtrack
+                            board[row][col] = 0;
                         }
                     }
                     return false;
@@ -243,6 +326,7 @@ public class SudokuController {
             }
 
             if (solved) {
+                System.out.println("Sudoku solved, copying solution.");
                 copySolution(current, board);
                 return true;
             }
@@ -263,6 +347,40 @@ public class SudokuController {
     private void copySolution(int[][] source, int[][] target) {
         for (int row = 0; row < SIZE; row++) {
             System.arraycopy(source[row], 0, target[row], 0, SIZE);
+        }
+    }
+    private void printBoardInOneLine(int[][] board) {
+        StringBuilder boardLine = new StringBuilder();
+        for (int[] row : board) {
+            for (int cell : row) {
+                boardLine.append(cell);
+            }
+        }
+        System.out.println(boardLine);
+    }
+
+    private void resetBoard() {
+        for (int row = 0; row < SIZE; row++) {
+            for (int col = 0; col < SIZE; col++) {
+                if (cells[row][col].isEditable()){
+                    cells[row][col].setText(""); // Clear the text field
+                }
+            }
+        }
+    }
+    private void validateBoard() {
+        for (int row = 0; row < SIZE; row++) {
+            for (int col = 0; col < SIZE; col++) {
+                TextField cell = cells[row][col];
+                cell.textProperty().addListener((_, _, newValue) -> {
+                    if (!newValue.isEmpty()) {
+                        String filteredValue = newValue.replaceAll("[^\\d]", "");
+                        cell.setText(filteredValue.length() > 1 ? filteredValue.substring(0, 1) : filteredValue);
+                    } else {
+                        cell.setText("");
+                    }
+                });
+            }
         }
     }
 }

@@ -1,10 +1,10 @@
-package SocialGolfersProblem.DFS;
+package com.detyra1_ai.social_golfers.DLS;
 
 import java.util.*;
 
-public class SocialGolfersDFS {
+public class SocialGolfersDLS {
 
-    public static List<List<List<Integer>>> solve(int G, int P) {
+    public static List<List<List<Integer>>> solve(int G, int P, int depthLimit) {
         int N = G * P;
         int[][] pairFrequency = new int[N][N];
         List<List<List<Integer>>> weeks = new ArrayList<>();
@@ -13,7 +13,7 @@ public class SocialGolfersDFS {
 
         for (int week = 0; week < maxWeeks; week++) {
             List<List<Integer>> weekGroups = new ArrayList<>();
-            if (dfs(weekGroups, pairFrequency, G, P, N, new boolean[N])) {
+            if (dls(weekGroups, pairFrequency, G, P, N, new boolean[N], depthLimit, 0)) {
                 weeks.add(weekGroups);
             } else {
                 break;
@@ -24,22 +24,24 @@ public class SocialGolfersDFS {
 
     private static int calculateMaxWeeks(int G, int P, int N) {
         int totalPairs = (N * (N - 1)) / 2;
-
         int pairsPerWeek = G * ((P * (P - 1)) / 2);
-
         return totalPairs / pairsPerWeek;
     }
 
-    private static boolean dfs(List<List<Integer>> weekGroups, int[][] pairFrequency,
-                               int G, int P, int N, boolean[] used) {
+    private static boolean dls(List<List<Integer>> weekGroups, int[][] pairFrequency,
+                               int G, int P, int N, boolean[] used, int depthLimit, int depth) {
         if (weekGroups.size() == G) {
             return true;
+        }
+
+        if (depth > depthLimit) {
+            return false;
         }
 
         List<Integer> currentGroup = new ArrayList<>();
         if (formGroup(currentGroup, pairFrequency, used, P, N)) {
             weekGroups.add(currentGroup);
-            if (dfs(weekGroups, pairFrequency, G, P, N, used)) {
+            if (dls(weekGroups, pairFrequency, G, P, N, used, depthLimit, depth + 1)) {
                 return true;
             }
 

@@ -1,4 +1,4 @@
-package SocialGolfersProblem.DFS;
+package com.detyra1_ai.social_golfers.DFS;
 
 import javafx.scene.Scene;
 import javafx.scene.control.TextArea;

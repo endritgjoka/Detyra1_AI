@@ -5,7 +5,7 @@
 
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
-<VBox fx:controller="SocialGolfersProblem.SocialGolfersController" alignment="CENTER" spacing="10" xmlns:fx="http://javafx.com/fxml">
+<VBox fx:controller="com.detyra1_ai.social_golfers.SocialGolfersController" alignment="CENTER" spacing="10" xmlns:fx="http://javafx.com/fxml">
     <children>
         <!-- Drop-down for algorithm selection -->
         <ComboBox fx:id="algorithmComboBox" onAction="#handleAlgorithmSelection" promptText="Select Algorithm">
