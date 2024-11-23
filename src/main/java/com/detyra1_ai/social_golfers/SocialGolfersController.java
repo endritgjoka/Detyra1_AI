@@ -2,6 +2,7 @@ package com.detyra1_ai.social_golfers;
 
 import com.detyra1_ai.social_golfers.DFS.DFSView;
 import com.detyra1_ai.social_golfers.DLS.DLSView;
+import com.detyra1_ai.social_golfers.BackTracking.BacktrackingView;  // Import BacktrackingView
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
@@ -45,13 +46,14 @@ public class SocialGolfersController {
                 return;
             }
 
-
             String selectedAlgorithm = algorithmComboBox.getValue();
             if ("DFS".equals(selectedAlgorithm)) {
                 DFSView.display(groups, groupSize);
-            } else {
+            } else if ("DLS".equals(selectedAlgorithm)) {
                 int depthLimit = Integer.parseInt(depthLimitField.getText());
                 DLSView.display(groups, groupSize, depthLimit);
+            } else if ("Backtracking".equals(selectedAlgorithm)) {
+                BacktrackingView.display(groups, groupSize);
             }
         } catch (NumberFormatException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
