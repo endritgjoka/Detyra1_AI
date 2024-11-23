@@ -1,6 +1,7 @@
 package com.detyra1_ai.latin_square;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
@@ -13,11 +14,17 @@ public class LatinSquareController {
     private TextArea outputArea;
 
     @FXML
+    private Label errorLabel;
+
+    @FXML
     private void generateLatinSquare() {
+        errorLabel.setVisible(false); // Hide error label initially
+        outputArea.clear(); // Clear previous results
+
         try {
             int n = Integer.parseInt(sizeInput.getText().trim());
             if (n <= 0) {
-                outputArea.setText("Please enter a positive integer for n.");
+                showError("Please enter a positive integer for n.");
                 return;
             }
 
@@ -25,11 +32,16 @@ public class LatinSquareController {
             if (generateLatinSquare(grid, n)) {
                 outputArea.setText(formatGrid(grid, n));
             } else {
-                outputArea.setText("Could not generate a Latin Square for the given size.");
+                showError("Could not generate a Latin Square for the given size.");
             }
         } catch (NumberFormatException e) {
-            outputArea.setText("Invalid input. Please enter a valid integer.");
+            showError("Invalid input. Please enter a valid integer.");
         }
+    }
+
+    private void showError(String message) {
+        errorLabel.setText(message);
+        errorLabel.setVisible(true);
     }
 
     private boolean solve(int[][] grid, int n, int row, int col) {
@@ -59,7 +71,6 @@ public class LatinSquareController {
     private boolean generateLatinSquare(int[][] grid, int n) {
         return solve(grid, n, 0, 0); // Start solving from the top-left corner
     }
-
 
     private boolean isValid(int[][] grid, int row, int col, int num, int n) {
         for (int i = 0; i < n; i++) {
