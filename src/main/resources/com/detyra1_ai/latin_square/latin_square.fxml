@@ -14,6 +14,9 @@
                 <TextField fx:id="sizeInput" promptText="Positive Integer" prefWidth="120.0" style="-fx-font-size: 14px;"/>
                 <Button text="Generate" onAction="#generateLatinSquare" style="-fx-font-size: 14px; -fx-background-color: #0066cc; -fx-text-fill: white; -fx-border-radius: 5; -fx-background-radius: 5;"/>
             </HBox>
+            <HBox spacing="10.0" alignment="CENTER">
+                <Button text="Validate Solution" onAction="#validateSolution" style="-fx-font-size: 14px; -fx-background-color: #28a745; -fx-text-fill: white; -fx-border-radius: 5; -fx-background-radius: 5;"/>
+            </HBox>
             <Label fx:id="errorLabel" text="" style="-fx-text-fill: red; -fx-font-size: 12px;" visible="false" alignment="CENTER"/>
             <TextArea fx:id="outputArea" prefWidth="480.0" prefHeight="300.0" editable="false" wrapText="true" style="-fx-font-size: 14px; -fx-control-inner-background: #f9f9f9; -fx-border-color: #ccc;"/>
         </VBox>

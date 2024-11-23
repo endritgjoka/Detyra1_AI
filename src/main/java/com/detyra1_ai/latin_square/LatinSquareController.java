@@ -16,6 +16,8 @@ public class LatinSquareController {
     @FXML
     private Label errorLabel;
 
+    private int[][] lastGeneratedGrid; // Store the last generated grid
+
     @FXML
     private void generateLatinSquare() {
         errorLabel.setVisible(false); // Hide error label initially
@@ -28,9 +30,9 @@ public class LatinSquareController {
                 return;
             }
 
-            int[][] grid = new int[n][n];
-            if (generateLatinSquare(grid, n)) {
-                outputArea.setText(formatGrid(grid, n));
+            lastGeneratedGrid = new int[n][n];
+            if (generateLatinSquare(lastGeneratedGrid, n)) {
+                outputArea.setText(formatGrid(lastGeneratedGrid, n));
             } else {
                 showError("Could not generate a Latin Square for the given size.");
             }
@@ -39,9 +41,44 @@ public class LatinSquareController {
         }
     }
 
+    @FXML
+    private void validateSolution() {
+        errorLabel.setVisible(false);
+
+        if (lastGeneratedGrid == null) {
+            showError("No Latin Square generated to validate.");
+            return;
+        }
+
+        if (isValidLatinSquare(lastGeneratedGrid)) {
+            outputArea.appendText("\nThe solution is a valid Latin Square.");
+        } else {
+            outputArea.appendText("\nThe solution is NOT a valid Latin Square.");
+        }
+    }
+
     private void showError(String message) {
         errorLabel.setText(message);
         errorLabel.setVisible(true);
+    }
+
+    private boolean isValidLatinSquare(int[][] grid) {
+        int n = grid.length;
+
+        for (int i = 0; i < n; i++) {
+            boolean[] rowCheck = new boolean[n + 1];
+            boolean[] colCheck = new boolean[n + 1];
+
+            for (int j = 0; j < n; j++) {
+                if (rowCheck[grid[i][j]] || colCheck[grid[j][i]]) {
+                    return false; // Duplicate found
+                }
+
+                rowCheck[grid[i][j]] = true;
+                colCheck[grid[j][i]] = true;
+            }
+        }
+        return true;
     }
 
     private boolean solve(int[][] grid, int n, int row, int col) {
