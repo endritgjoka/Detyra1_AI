@@ -1,13 +1,13 @@
-package com.detyra1_ai.social_golfers.DFS;
+package com.detyra1_ai.social_golfers.BackTracking;
 
 import java.util.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class SocialGolfersDFS {
+public class SocialGolfersBacktracking {
 
-    private static final String FILE_PATH = "sgp-dfs.txt";
+    private static final String FILE_PATH = "sgp-backtracking.txt";
     private static Set<String> allPlayedPairs = new HashSet<>();
     private static final long TIME_LIMIT = 5 * 60 * 1000; // 5 minutes in milliseconds
 
@@ -39,7 +39,7 @@ public class SocialGolfersDFS {
             while (!validWeekFound && retries < retryLimit) {
                 Collections.shuffle(allPlayers);
 
-                if (dfs(weekGroups, G, P, allPlayers, new boolean[N])) {
+                if (backtrack(weekGroups, G, P, allPlayers, new boolean[N])) {
                     if (!isWeekRepeated(weekGroups)) {
                         validWeekFound = true;
                         weeks.add(weekGroups);
@@ -65,7 +65,7 @@ public class SocialGolfersDFS {
         return weeks;
     }
 
-    private static boolean dfs(List<List<Integer>> weekGroups, int G, int P, List<Integer> allPlayers, boolean[] used) {
+    private static boolean backtrack(List<List<Integer>> weekGroups, int G, int P, List<Integer> allPlayers, boolean[] used) {
         if (weekGroups.size() == G) {
             return true;
         }
@@ -74,11 +74,10 @@ public class SocialGolfersDFS {
         if (formGroup(currentGroup, P, allPlayers, used)) {
             weekGroups.add(currentGroup);
 
-            if (dfs(weekGroups, G, P, allPlayers, used)) {
+            if (backtrack(weekGroups, G, P, allPlayers, used)) {
                 return true;
             }
 
-            // Backtracking
             weekGroups.remove(weekGroups.size() - 1);
             for (int player : currentGroup) {
                 used[player] = false;
@@ -185,5 +184,4 @@ public class SocialGolfersDFS {
             System.err.println("Error clearing the file: " + e.getMessage());
         }
     }
-
 }

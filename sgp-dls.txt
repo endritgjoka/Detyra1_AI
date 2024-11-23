@@ -1,0 +1,70 @@
+Week 1:
+Formed group: [19, 10, 21, 11]
+Formed group: [9, 17, 28, 31]
+Formed group: [8, 16, 23, 13]
+Formed group: [27, 25, 0, 29]
+Formed group: [20, 18, 1, 7]
+Formed group: [22, 14, 15, 6]
+Formed group: [24, 2, 12, 3]
+Formed group: [4, 26, 5, 30]
+
+Week 2:
+Formed group: [30, 18, 27, 22]
+Formed group: [26, 19, 14, 16]
+Formed group: [31, 2, 6, 10]
+Formed group: [12, 28, 21, 20]
+Formed group: [8, 3, 25, 7]
+Formed group: [15, 17, 29, 5]
+Formed group: [0, 24, 23, 1]
+Formed group: [13, 4, 11, 9]
+
+Week 3:
+Formed group: [24, 9, 27, 26]
+Formed group: [31, 20, 4, 16]
+Formed group: [23, 21, 2, 17]
+Formed group: [8, 6, 30, 19]
+Formed group: [14, 5, 1, 13]
+Formed group: [29, 18, 28, 3]
+Formed group: [7, 10, 22, 0]
+Formed group: [25, 15, 12, 11]
+
+Week 4:
+Formed group: [14, 11, 20, 17]
+Formed group: [26, 22, 3, 13]
+Formed group: [5, 9, 25, 6]
+Formed group: [29, 30, 10, 12]
+Formed group: [23, 18, 19, 15]
+Formed group: [24, 7, 21, 16]
+Formed group: [31, 8, 1, 27]
+Formed group: [28, 2, 0, 4]
+
+Week 5:
+Formed group: [23, 28, 7, 30]
+Formed group: [10, 8, 18, 9]
+Formed group: [5, 27, 11, 16]
+Formed group: [3, 0, 20, 6]
+Formed group: [15, 2, 1, 26]
+Formed group: [31, 22, 24, 25]
+Formed group: [21, 4, 14, 29]
+Formed group: [13, 17, 19, 12]
+
+Week 6:
+Formed group: [13, 0, 15, 30]
+Formed group: [27, 3, 4, 17]
+Formed group: [25, 18, 21, 26]
+Formed group: [9, 12, 1, 16]
+Formed group: [2, 22, 20, 8]
+Formed group: [24, 14, 10, 28]
+Formed group: [5, 19, 7, 31]
+Formed group: [11, 6, 23, 29]
+
+Week 7:
+Formed group: [3, 21, 15, 31]
+Formed group: [12, 22, 5, 23]
+Formed group: [26, 28, 8, 11]
+Formed group: [0, 17, 18, 16]
+Formed group: [1, 4, 25, 10]
+Formed group: [6, 13, 27, 7]
+Formed group: [2, 14, 9, 30]
+Formed group: [29, 20, 19, 24]
+

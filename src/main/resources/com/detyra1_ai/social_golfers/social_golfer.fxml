@@ -13,6 +13,7 @@
                 <FXCollections fx:factory="observableArrayList">
                     <String fx:value="DFS"/>
                     <String fx:value="DLS"/>
+                    <String fx:value="Backtracking"/> <!-- Added Backtracking option -->
                 </FXCollections>
             </items>
         </ComboBox>
