@@ -26,6 +26,9 @@
         <TextField fx:id="depthLimitField" promptText="Enter depth limit" visible="false"/>
 
         <Button text="Solve" onAction="#handleSolveButtonClick"/>
+        <Button text="Show results" onAction="#handleStopButtonClick"/>
+        <Button text="Test Solution" onAction="#testSolution"/>
+
 
     </children>
 </VBox>

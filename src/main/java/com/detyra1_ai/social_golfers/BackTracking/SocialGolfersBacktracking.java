@@ -1,151 +1,130 @@
 package com.detyra1_ai.social_golfers.BackTracking;
 
-import java.util.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.*;
 
 public class SocialGolfersBacktracking {
 
     private static final String FILE_PATH = "sgp-backtracking.txt";
     private static Set<String> allPlayedPairs = new HashSet<>();
-    private static final long TIME_LIMIT = 5 * 60 * 1000; // 5 minutes in milliseconds
+    private static final long TIME_LIMIT = 30 * 60 * 1000; // 30 minutes in milliseconds
 
     public static List<List<List<Integer>>> solve(int G, int P) {
         int N = G * P;
         List<List<List<Integer>>> weeks = new ArrayList<>();
-
         List<Integer> allPlayers = new ArrayList<>();
         for (int i = 0; i < N; i++) {
             allPlayers.add(i);
         }
 
         clearFile();
-
-        int weekNumber = 1;
-        int retryLimit = 1000000;
         long startTime = System.currentTimeMillis();
+        int weekNumber = 1;
 
-        while (true) {
-            if (System.currentTimeMillis() - startTime >= TIME_LIMIT) {
-                System.out.println("Time limit of 5 minutes reached. Terminating program.");
-                break;
-            }
+        while (System.currentTimeMillis() - startTime < TIME_LIMIT) {
+            List<List<Integer>> weekGroups = generateWeek(G, P, allPlayers);
 
-            List<List<Integer>> weekGroups = new ArrayList<>();
-            boolean validWeekFound = false;
-            int retries = 0;
-
-            while (!validWeekFound && retries < retryLimit) {
-                Collections.shuffle(allPlayers);
-
-                if (backtrack(weekGroups, G, P, allPlayers, new boolean[N])) {
-                    if (!isWeekRepeated(weekGroups)) {
-                        validWeekFound = true;
-                        weeks.add(weekGroups);
-                        saveWeekToFile(weekNumber, weekGroups);
-                        updateGlobalPairFrequency(weekGroups, true);
-                    } else {
-                        retries++;
-                    }
-                } else {
-                    retries++;
-                }
-            }
-
-            if (validWeekFound) {
+            if (weekGroups != null && !containsDuplicateWeek(weeks, weekGroups)) {
+                weeks.add(weekGroups);
+                saveWeekToFile(weekNumber, weekGroups);
+                updateGlobalPairFrequency(weekGroups, true);
                 System.out.println("Week " + weekNumber + " formed successfully.");
                 weekNumber++;
             } else {
-                System.out.println("Could not generate a valid grouping for week " + weekNumber + " after " + retryLimit + " attempts.");
-                break;
+                // Retry mechanism: shuffle players and attempt again
+                Collections.shuffle(allPlayers);
+                System.out.println("Retrying to form a valid week...");
             }
         }
 
         return weeks;
     }
 
-    private static boolean backtrack(List<List<Integer>> weekGroups, int G, int P, List<Integer> allPlayers, boolean[] used) {
-        if (weekGroups.size() == G) {
-            return true;
-        }
-
-        List<Integer> currentGroup = new ArrayList<>();
-        if (formGroup(currentGroup, P, allPlayers, used)) {
-            weekGroups.add(currentGroup);
-
-            if (backtrack(weekGroups, G, P, allPlayers, used)) {
+    private static boolean containsDuplicateWeek(List<List<List<Integer>>> weeks, List<List<Integer>> weekGroups) {
+        List<List<Integer>> normalizedWeekGroups = normalizeWeekGroups(weekGroups);
+        for (List<List<Integer>> week : weeks) {
+            List<List<Integer>> normalizedExistingWeek = normalizeWeekGroups(week);
+            if (normalizedExistingWeek.equals(normalizedWeekGroups)) {
                 return true;
             }
-
-            weekGroups.remove(weekGroups.size() - 1);
-            for (int player : currentGroup) {
-                used[player] = false;
-            }
         }
         return false;
     }
 
-    private static boolean formGroup(List<Integer> currentGroup, int P, List<Integer> allPlayers, boolean[] used) {
-        if (currentGroup.size() == P) {
-            return true;
+    private static List<List<Integer>> normalizeWeekGroups(List<List<Integer>> weekGroups) {
+        List<List<Integer>> normalized = new ArrayList<>();
+        for (List<Integer> group : weekGroups) {
+            List<Integer> sortedGroup = new ArrayList<>(group);
+            Collections.sort(sortedGroup);
+            normalized.add(sortedGroup);
         }
-
-        List<Integer> remainingPlayers = new ArrayList<>();
-        for (int player : allPlayers) {
-            if (!used[player]) {
-                remainingPlayers.add(player);
+        normalized.sort((a, b) -> {
+            for (int i = 0; i < Math.min(a.size(), b.size()); i++) {
+                int cmp = Integer.compare(a.get(i), b.get(i));
+                if (cmp != 0) return cmp;
             }
-        }
+            return Integer.compare(a.size(), b.size());
+        });
+        return normalized;
+    }
 
-        Collections.shuffle(remainingPlayers);
+    private static List<List<Integer>> generateWeek(int G, int P, List<Integer> allPlayers) {
+        List<List<Integer>> weekGroups = new ArrayList<>();
+        Set<String> weekPairs = new HashSet<>();
+        List<Integer> availablePlayers = new ArrayList<>(allPlayers);
+        Collections.shuffle(availablePlayers);
 
-        for (int player : remainingPlayers) {
-            if (!used[player] && isValidForGroup(currentGroup, player)) {
-                System.out.println("Hint: Attempting to add player " + player + " to group " + currentGroup);
-                currentGroup.add(player);
-                used[player] = true;
+        for (int i = 0; i < G; i++) {
+            List<Integer> group = new ArrayList<>();
 
-                if (formGroup(currentGroup, P, allPlayers, used)) {
-                    return true;
+            for (int j = 0; j < P; j++) {
+                Integer player = findValidPlayer(group, weekPairs, availablePlayers);
+                if (player == null) {
+                    return null; // Fail if no valid player is found
                 }
-
-                // Backtrack
-                System.out.println("Hint: Removing player " + player + " from group " + currentGroup);
-                currentGroup.remove(currentGroup.size() - 1);
-                used[player] = false;
+                group.add(player);
+                availablePlayers.remove(player);
             }
+
+            weekGroups.add(group);
+            updateWeekPairs(group, weekPairs);
         }
-        return false;
+
+        return weekGroups;
     }
 
-    private static boolean isValidForGroup(List<Integer> currentGroup, int player) {
-        for (int member : currentGroup) {
-            String pair = generatePairString(player, member);
-            if (allPlayedPairs.contains(pair)) {
-                System.out.println("Hint: Pair (" + player + ", " + member + ") already played together.");
-                return false;
+    private static Integer findValidPlayer(List<Integer> group, Set<String> weekPairs, List<Integer> availablePlayers) {
+        for (Integer player : availablePlayers) {
+            boolean isValid = true;
+            for (Integer member : group) {
+                String pair = generatePairString(player, member);
+                if (allPlayedPairs.contains(pair) || weekPairs.contains(pair)) {
+                    isValid = false;
+                    // Print hint message when the player is invalid
+                    System.out.println("Player " + player + " cannot join the group " + group + " because they have already played with player " + member + ".");
+                    break;
+                }
+            }
+            if (isValid) {
+                return player;
             }
         }
-        return true;
+        return null; // No valid player found
+    }
+
+
+    private static void updateWeekPairs(List<Integer> group, Set<String> weekPairs) {
+        for (int i = 0; i < group.size(); i++) {
+            for (int j = i + 1; j < group.size(); j++) {
+                weekPairs.add(generatePairString(group.get(i), group.get(j)));
+            }
+        }
     }
 
     private static String generatePairString(int player1, int player2) {
         return player1 < player2 ? player1 + "," + player2 : player2 + "," + player1;
-    }
-
-    private static boolean isWeekRepeated(List<List<Integer>> weekGroups) {
-        for (List<Integer> group : weekGroups) {
-            for (int i = 0; i < group.size(); i++) {
-                for (int j = i + 1; j < group.size(); j++) {
-                    String pair = generatePairString(group.get(i), group.get(j));
-                    if (allPlayedPairs.contains(pair)) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
     }
 
     private static void updateGlobalPairFrequency(List<List<Integer>> weekGroups, boolean add) {

@@ -12,23 +12,7 @@ import java.util.List;
 
 public class BacktrackingView {
     private static TextArea resultArea = new TextArea();
-
-    public static void display(int groups, int players) {
-        Stage stage = new Stage();
-        stage.setTitle("Backtracking Solution");
-
-        List<List<List<Integer>>> weeks = SocialGolfersBacktracking.solve(groups, players);
-
-        resultArea.setEditable(false);
-
-        displaySolutionInFile3(weeks);
-
-        VBox layout = new VBox(resultArea);
-        Scene scene = new Scene(layout, 400, 300);
-
-        stage.setScene(scene);
-        stage.show();
-    }
+    private static boolean isStopped = false;
 
     private static void displaySolutionInFile3(List<List<List<Integer>>> weeks) {
         try (BufferedReader reader = new BufferedReader(new FileReader("sgp-backtracking.txt"))) {
@@ -43,6 +27,34 @@ public class BacktrackingView {
         appendWeeksToTextArea(weeks);
     }
 
+    public static void handleStopButtonClick() {
+        isStopped = true;
+        displayResultsInNewWindow();
+    }
+
+    private static void displayResultsInNewWindow() {
+        Stage resultStage = new Stage();
+        resultStage.setTitle("Results from File");
+
+        // Create a new TextArea to display the file content
+        TextArea resultFileArea = new TextArea();
+        resultFileArea.setEditable(false);
+
+        try (BufferedReader reader = new BufferedReader(new FileReader("sgp-backtracking.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                resultFileArea.appendText(line + "\n"); // Append each line to the TextArea
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading the file: " + e.getMessage());
+        }
+
+        VBox layout = new VBox(resultFileArea);
+        Scene scene = new Scene(layout, 400, 300);
+
+        resultStage.setScene(scene);
+        resultStage.show();
+    }
     private static void appendWeeksToTextArea(List<List<List<Integer>>> weeks) {
         int weekCount = 1;
         for (List<List<Integer>> week : weeks) {

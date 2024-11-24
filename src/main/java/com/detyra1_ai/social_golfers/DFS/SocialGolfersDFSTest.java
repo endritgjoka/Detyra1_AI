@@ -13,7 +13,7 @@ public class SocialGolfersDFSTest {
         System.out.println("Is the solution valid? " + isValid);
     }
 
-    private static boolean validateSolution(String fileName, int G, int P) {
+    public static boolean validateSolution(String fileName, int G, int P) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
             Set<String> seenPairs = new HashSet<>();
