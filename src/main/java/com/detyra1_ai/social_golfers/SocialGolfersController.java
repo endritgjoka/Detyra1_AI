@@ -1,12 +1,21 @@
 package com.detyra1_ai.social_golfers;
 
+import com.detyra1_ai.social_golfers.BackTracking.BacktrackingTest;
+import com.detyra1_ai.social_golfers.BackTracking.SocialGolfersBacktracking;
 import com.detyra1_ai.social_golfers.DFS.DFSView;
+import com.detyra1_ai.social_golfers.DFS.SocialGolfersDFS;
 import com.detyra1_ai.social_golfers.DLS.DLSView;
 import com.detyra1_ai.social_golfers.BackTracking.BacktrackingView;  // Import BacktrackingView
+import com.detyra1_ai.social_golfers.DLS.SocialGolfersDLS;
+import com.detyra1_ai.social_golfers.DLS.SocialGolfersDLSTest;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import com.detyra1_ai.social_golfers.DFS.SocialGolfersDFSTest;
+
+import java.util.List;
 
 public class SocialGolfersController {
     @FXML
@@ -48,12 +57,19 @@ public class SocialGolfersController {
 
             String selectedAlgorithm = algorithmComboBox.getValue();
             if ("DFS".equals(selectedAlgorithm)) {
-                DFSView.display(groups, groupSize);
+                new Thread(() -> {
+                    List<List<List<Integer>>> weeks = SocialGolfersDFS.solve(groups, groupSize);
+
+                }).start();
             } else if ("DLS".equals(selectedAlgorithm)) {
                 int depthLimit = Integer.parseInt(depthLimitField.getText());
-                DLSView.display(groups, groupSize, depthLimit);
+                new Thread(() -> {
+                    List<List<List<Integer>>> weeks = SocialGolfersDLS.solve(groups, groupSize,depthLimit);
+                }).start();
             } else if ("Backtracking".equals(selectedAlgorithm)) {
-                BacktrackingView.display(groups, groupSize);
+                new Thread(() -> {
+                    List<List<List<Integer>>> weeks = SocialGolfersBacktracking.solve(groups, groupSize);
+                }).start();
             }
         } catch (NumberFormatException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -70,6 +86,7 @@ public class SocialGolfersController {
         }
     }
 
+
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
@@ -77,4 +94,48 @@ public class SocialGolfersController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+    @FXML
+    public void handleStopButtonClick() {
+        if ("DLS".equals(algorithmComboBox.getValue())) {
+            DLSView.handleStopButtonClick();
+        } else if ("DFS".equals(algorithmComboBox.getValue())) {
+            DFSView.handleStopButtonClick();
+        }else if("Backtracking".equals(algorithmComboBox.getValue())) {
+            BacktrackingView.handleStopButtonClick();
+        }
+    }
+
+    @FXML
+    public void testSolution() {
+        int groups = Integer.parseInt(playersField.getText()) / Integer.parseInt(groupSizeField.getText());
+        int players = Integer.parseInt(groupSizeField.getText());
+
+        // Run the validation method
+        if ("DFS".equals(algorithmComboBox.getValue())) {
+            boolean isValid = SocialGolfersDFSTest.validateSolution("sgp-dfs.txt", groups, players);
+            String resultMessage = isValid ? "The solution is valid!" : "The solution is not valid!";
+            Alert alert = new Alert(isValid ? Alert.AlertType.INFORMATION : Alert.AlertType.ERROR);
+            alert.setTitle("Test Solution");
+            alert.setHeaderText(null);
+            alert.setContentText(resultMessage);
+            alert.showAndWait();
+        } else if ("DLS".equals(algorithmComboBox.getValue())) {
+            boolean isValid = SocialGolfersDLSTest.validateSolution("sgp-dfs.txt", groups, players);
+            String resultMessage = isValid ? "The solution is valid!" : "The solution is not valid!";
+            Alert alert = new Alert(isValid ? Alert.AlertType.INFORMATION : Alert.AlertType.ERROR);
+            alert.setTitle("Test Solution");
+            alert.setHeaderText(null);
+            alert.setContentText(resultMessage);
+            alert.showAndWait();
+        } else if ("Backtracking".equals(algorithmComboBox.getValue())) {
+        boolean isValid = BacktrackingTest.validateSolution("sgp-dfs.txt", groups, players);
+        String resultMessage = isValid ? "The solution is valid!" : "The solution is not valid!";
+        Alert alert = new Alert(isValid ? Alert.AlertType.INFORMATION : Alert.AlertType.ERROR);
+        alert.setTitle("Test Solution");
+        alert.setHeaderText(null);
+        alert.setContentText(resultMessage);
+        alert.showAndWait();
+    }
+    }
+
 }

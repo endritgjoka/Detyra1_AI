@@ -1,36 +1,46 @@
 package com.detyra1_ai.social_golfers.DLS;
 
+import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.io.*;
 import java.util.List;
 
 public class DLSView {
-    public static void display(int groups, int players, int depthLimit) {
-        Stage stage = new Stage();
-        stage.setTitle("DLS Solution");
+    private static TextArea resultArea = new TextArea();
+    private static boolean isStopped = false;
 
-        if (depthLimit <= 0) {
-            depthLimit = Integer.MAX_VALUE;
-        }
+    public static void handleStopButtonClick() {
+        isStopped = true;
+        displayResultsInNewWindow();
+    }
 
-        List<List<List<Integer>>> weeks = SocialGolfersDLS.solve(groups, players, depthLimit);
+    private static void displayResultsInNewWindow() {
+        Stage resultStage = new Stage();
+        resultStage.setTitle("Results from File");
 
-        TextArea resultArea = new TextArea();
-        for (int w = 0; w < weeks.size(); w++) {
-            resultArea.appendText("Week " + (w + 1) + ":\n");
-            List<List<Integer>> groupsForWeek = weeks.get(w);
-            for (int g = 0; g < groupsForWeek.size(); g++) {
-                resultArea.appendText("  Group " + (g + 1) + ": " + groupsForWeek.get(g) + "\n");
+        // Create a new TextArea to display the file content
+        TextArea resultFileArea = new TextArea();
+        resultFileArea.setEditable(false);
+
+        try (BufferedReader reader = new BufferedReader(new FileReader("sgp-dls.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                resultFileArea.appendText(line + "\n"); // Append each line to the TextArea
             }
+        } catch (IOException e) {
+            System.err.println("Error reading the file: " + e.getMessage());
         }
 
-        VBox layout = new VBox(resultArea);
+        VBox layout = new VBox(resultFileArea);
         Scene scene = new Scene(layout, 400, 300);
 
-        stage.setScene(scene);
-        stage.show();
+        resultStage.setScene(scene);
+        resultStage.show();
     }
+
 }
