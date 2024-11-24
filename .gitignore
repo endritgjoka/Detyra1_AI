@@ -37,3 +37,8 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+
+sgp-backtracking.txt
+sgp-dfs.txt
+sgp-dls.txt
