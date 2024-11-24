@@ -13,10 +13,10 @@ public class Utils {
         generateFullySolvedBoard(board);
 
         int cellsToRemove = switch (level) {
-            case "Easy" -> 30;
-            case "Medium" -> 40;
-            case "Hard" -> 50;
-            default -> 30;
+            case "Easy" -> 38;
+            case "Medium" -> 48;
+            case "Hard" -> 58;
+            default -> 35;
         };
 
         while (cellsToRemove > 0) {

@@ -17,11 +17,11 @@ public class MainApp extends Application {
         String basePath = "/com/detyra1_ai/";
 
         Button buttonDetyra1 = createTaskButton("Sudoku", "sudoku_icon.png", e ->
-                openFXML(primaryStage, basePath + "sudoku/sudoku_game.fxml", "Detyra1"));
+                openFXML( basePath + "sudoku/sudoku_game.fxml", "Detyra1"));
         Button buttonDetyra2 = createTaskButton("Social Golfers", "golf_icon.png", e ->
-                openFXML(primaryStage, basePath + "social_golfers/social_golfer.fxml", "Detyra2"));
+                openFXML( basePath + "social_golfers/social_golfer.fxml", "Detyra2"));
         Button buttonDetyra3 = createTaskButton("Latin Square", "latin_square.png", e ->
-                openFXML(primaryStage, basePath + "latin_square/latin_square.fxml", "Detyra3"));
+                openFXML( basePath + "latin_square/latin_square.fxml", "Detyra3"));
 
         VBox layout = new VBox(20, buttonDetyra1, buttonDetyra2, buttonDetyra3);
         layout.setStyle("-fx-padding: 20; -fx-alignment: center;");
@@ -46,18 +46,23 @@ public class MainApp extends Application {
         return button;
     }
 
-    private void openFXML(Stage primaryStage, String fxmlFile, String title) {
+    private void openFXML(String fxmlFile, String title) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
             Parent root = loader.load();
             Scene scene = new Scene(root);
 
-            primaryStage.setTitle(title);
-            primaryStage.setScene(scene);
+            Stage newStage = new Stage();
+            newStage.setTitle(title);
+            newStage.setScene(scene);
+            newStage.setResizable(false);
+            newStage.show();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
     public static void main(String[] args) {
         launch(args);
