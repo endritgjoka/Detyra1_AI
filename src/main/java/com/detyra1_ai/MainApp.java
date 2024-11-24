@@ -17,11 +17,11 @@ public class MainApp extends Application {
         String basePath = "/com/detyra1_ai/";
 
         Button buttonDetyra1 = createTaskButton("Sudoku", "sudoku_icon.png", e ->
-                openFXML( basePath + "sudoku/sudoku_game.fxml", "Detyra1"));
+                openFXML( basePath + "sudoku/sudoku_game.fxml", "Sudoku Game"));
         Button buttonDetyra2 = createTaskButton("Social Golfers", "golf_icon.png", e ->
-                openFXML( basePath + "social_golfers/social_golfer.fxml", "Detyra2"));
+                openFXML( basePath + "social_golfers/social_golfer.fxml", "Social Golfers Problem"));
         Button buttonDetyra3 = createTaskButton("Latin Square", "latin_square.png", e ->
-                openFXML( basePath + "latin_square/latin_square.fxml", "Detyra3"));
+                openFXML( basePath + "latin_square/latin_square.fxml", "Latin Squuare"));
 
         VBox layout = new VBox(20, buttonDetyra1, buttonDetyra2, buttonDetyra3);
         layout.setStyle("-fx-padding: 20; -fx-alignment: center;");
