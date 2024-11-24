@@ -117,3 +117,111 @@ For a 3x3 grid, the generated Latin Square might look like:
 | --- | --- | --- |
 | 2   | 3   | 1   |
 | 3   | 1   | 2   |
+
+
+
+# Sudoku Solver and Generator
+
+This application provides tools to **solve** and **generate Sudoku puzzles** using efficient algorithms. Users can input their own Sudoku puzzles for solving or generate a random puzzle to play. The solution is validated to ensure it follows Sudoku rules.
+
+---
+
+## **Problem Description**
+
+A **Sudoku puzzle** consists of a 9x9 grid divided into 9 subgrids (3x3). The objective is to fill the grid with digits from `1` to `9` while ensuring:
+
+1. Each **row** contains the digits `1` to `9` without repetition.
+2. Each **column** contains the digits `1` to `9` without repetition.
+3. Each **3x3 subgrid** contains the digits `1` to `9` without repetition.
+
+---
+
+## **Features**
+
+- **Input**:
+  - Provide a partially completed 9x9 Sudoku grid.
+  - Option to generate a random Sudoku puzzle.
+- **Output**:
+  - Solved Sudoku puzzle or an error message if unsolvable.
+  - Valid Sudoku puzzle when generated.
+
+---
+
+## **Process Overview**
+
+### **Solving Method**
+
+1. **Backtracking**:  
+   - A recursive algorithm that attempts to fill the empty cells incrementally.
+   - If a conflict is detected, the algorithm backtracks to the previous cell and tries another number.
+   - Guarantees a solution if one exists.
+
+---
+
+### **Key Components**
+
+- **UI**:
+  - **Grid**: Interface to input or view the Sudoku puzzle.
+  - **Buttons**:
+    - `Solve`: Solve the entered puzzle.
+    - `Generate`: Create a new, random Sudoku puzzle.
+    - `Validate`: Check if the current grid follows Sudoku rules.
+  - **Alerts**: Provide feedback on errors or successful actions.
+
+---
+
+## **Usage**
+
+1. **Solve a Puzzle**:
+   - Input a partially completed grid.
+   - Click `Solve` to compute the solution.
+   - View the completed grid or an error if unsolvable.
+
+2. **Generate a Puzzle**:
+   - Click `Generate` to create a new, valid Sudoku puzzle.
+   - The generated puzzle will display in the grid.
+
+3. **Validate a Solution**:
+   - Click `Validate` after solving or manually completing a grid.
+   - Confirm if the grid meets Sudoku rules.
+
+---
+
+## **Example**
+
+### **Input Puzzle**:
+
+| 5   | _   | _   | _   | _   | _   | _   | _   | 6   |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| _   | _   | _   | _   | _   | 3   | _   | _   | _   |
+| _   | _   | 1   | _   | _   | _   | _   | _   | _   |
+| _   | 2   | _   | _   | _   | _   | 3   | _   | _   |
+| _   | _   | _   | _   | 7   | _   | _   | _   | _   |
+| _   | _   | _   | _   | _   | _   | _   | 8   | _   |
+| _   | _   | _   | _   | _   | _   | 5   | _   | _   |
+| _   | _   | 3   | _   | _   | _   | _   | _   | _   |
+| 9   | _   | _   | _   | _   | _   | _   | _   | 2   |
+
+### **Solved Puzzle**:
+
+| 5   | 7   | 8   | 1   | 4   | 2   | 9   | 3   | 6   |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 6   | 4   | 2   | 9   | 8   | 3   | 7   | 5   | 1   |
+| 3   | 9   | 1   | 6   | 5   | 7   | 2   | 4   | 8   |
+| 7   | 2   | 6   | 5   | 9   | 8   | 3   | 1   | 4   |
+| 4   | 8   | 9   | 3   | 7   | 1   | 6   | 2   | 5   |
+| 1   | 3   | 5   | 2   | 6   | 4   | 8   | 9   | 7   |
+| 8   | 1   | 7   | 4   | 2   | 9   | 5   | 6   | 3   |
+| 2   | 6   | 3   | 7   | 1   | 5   | 4   | 8   | 9   |
+| 9   | 5   | 4   | 8   | 3   | 6   | 1   | 7   | 2   |
+
+---
+
+## **Code Overview**
+
+The main logic is implemented in `SudokuController.java`, which handles:
+
+- **Solving puzzles** using the Backtracking algorithm.
+- **Generating valid Sudoku puzzles**.
+- **Validating solutions** to ensure compliance with Sudoku rules.
+
