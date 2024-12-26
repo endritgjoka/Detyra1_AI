@@ -2,14 +2,26 @@ package com.detyra1_ai.killer_sudoku;
 
 public class KillerSudokuSolver {
 
-
     private static final int SIZE = 9;
     private static int[][] grid = new int[SIZE][SIZE];
 
     private static final Cage[] cages = {
             new Cage(new int[][]{{0, 0}, {0, 1}}, 10),
             new Cage(new int[][]{{0, 2}, {1, 2}}, 9),
-            new Cage(new int[][]{{2, 0}, {2, 1}}, 10)
+            new Cage(new int[][]{{2, 0}, {2, 1}}, 10),
+            new Cage(new int[][]{{1, 3}, {0, 5}}, 5),
+
+            new Cage(new int[][]{{1, 0}, {2, 0}, {2, 1}}, 15),
+            new Cage(new int[][]{{0, 6}, {0, 7}, {0, 8}}, 20),
+            new Cage(new int[][]{{3, 3}, {3, 4}, {4, 3}}, 12),
+            new Cage(new int[][]{{5, 5}, {5, 6}, {5, 7}, {6, 7}}, 25),
+            new Cage(new int[][]{{7, 0}, {8, 0}, {8, 1}}, 12),
+            new Cage(new int[][]{{6, 6}, {6, 7}, {7, 6}}, 18),
+            new Cage(new int[][]{{3, 0}, {4, 0}, {5, 0}}, 17),
+            new Cage(new int[][]{{8, 8}}, 5),
+            new Cage(new int[][]{{4, 4}, {4, 5}}, 9),
+            new Cage(new int[][]{{0, 3}, {0, 4}, {1, 3}}, 13),
+
     };
 
     public static void main(String[] args) {
