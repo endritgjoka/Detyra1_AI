@@ -10,7 +10,6 @@ public class KillerSudokuSolver {
             new Cage(new int[][]{{0, 2}, {1, 2}}, 9),
             new Cage(new int[][]{{2, 0}, {2, 1}}, 10),
             new Cage(new int[][]{{1, 3}, {0, 5}}, 5),
-
             new Cage(new int[][]{{1, 0}, {2, 0}, {2, 1}}, 15),
             new Cage(new int[][]{{0, 6}, {0, 7}, {0, 8}}, 20),
             new Cage(new int[][]{{3, 3}, {3, 4}, {4, 3}}, 12),
