@@ -1,60 +1,77 @@
 package com.detyrat_ai.detyra3;
 
+// GameState.java
+import java.util.List;
+
 public class GameState {
-    private char[][] board;
-    private boolean isWhiteTurn;
+    public char[][] board; // 2D array representing the chessboard
+    private boolean isMaxTurn; // Indicates if it's MAX's turn
 
     public GameState() {
-        board = new char[8][8];
-        isWhiteTurn = true;
+        this.board = new char[8][8];
+        this.isMaxTurn = true;
     }
 
     public void initializeMidGame() {
-        String[] setup = {
-                "r.bqk.nr",
-                "pppp.ppp",
-                "....p...",
-                "..n.....",
-                "....P...",
-                "...N....",
-                "PPPP.PPP",
-                "RNBQKB.R"
+        // Initialize board with a mid-game state using letters
+        // Uppercase for MAX's pieces, lowercase for MIN's pieces
+        board = new char[][]{
+                { 'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r' }, // MIN's back rank
+                { 'p', 'p', 'p', 'p', '.', 'p', 'p', 'p' }, // MIN's pawns (with one moved)
+                { '.', '.', '.', '.', 'p', '.', '.', '.' }, // Example mid-game positioning
+                { '.', '.', '.', '.', '.', '.', 'P', '.' }, // Example mid-game positioning
+                { '.', '.', '.', 'P', '.', '.', '.', '.' }, // Example mid-game positioning
+                { '.', '.', '.', '.', '.', '.', '.', '.' }, // Empty squares
+                { 'P', 'P', 'P', '.', 'P', 'P', 'P', 'P' }, // MAX's pawns
+                { 'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R' }  // MAX's back rank
         };
-
-        for (int i = 0; i < 8; i++) {
-            board[i] = setup[i].toCharArray();
-        }
+        isMaxTurn = true; // MAX plays first
     }
 
-    public char[][] getBoard() {
-        return board;
-    }
-
-    public boolean isWhiteTurn() {
-        return isWhiteTurn;
-    }
-
-    public void switchTurn() {
-        isWhiteTurn = !isWhiteTurn;
-    }
-
-    public GameState clone() {
-        GameState clonedState = new GameState();
-        for (int i = 0; i < 8; i++) {
-            clonedState.board[i] = this.board[i].clone();
-        }
-        clonedState.isWhiteTurn = this.isWhiteTurn;
-        return clonedState;
+    public List<Move> generateMoves() {
+        return MoveGenerator.generateLegalMoves(this);
     }
 
     public void applyMove(Move move) {
-        int fromX = move.getFromX();
-        int fromY = move.getFromY();
-        int toX = move.getToX();
-        int toY = move.getToY();
+        board[move.toRow][move.toCol] = board[move.fromRow][move.fromCol];
+        board[move.fromRow][move.fromCol] = '.';
+        isMaxTurn = !isMaxTurn;
+    }
 
-        char piece = board[fromX][fromY];
-        board[toX][toY] = piece;
-        board[fromX][fromY] = '.';
+    public void undoMove(Move move, char capturedPiece) {
+        board[move.fromRow][move.fromCol] = board[move.toRow][move.toCol];
+        board[move.toRow][move.toCol] = capturedPiece;
+        isMaxTurn = !isMaxTurn;
+    }
+
+    public int evaluate() {
+        // Evaluation function based on piece value and mobility
+        int score = 0;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                score += getPieceValue(board[i][j]);
+            }
+        }
+        return score;
+    }
+
+    private int getPieceValue(char piece) {
+        switch (piece) {
+            case 'P': return 1;
+            case 'N': case 'B': return 3;
+            case 'R': return 5;
+            case 'Q': return 9;
+            case 'K': return 100;
+            case 'p': return -1;
+            case 'n': case 'b': return -3;
+            case 'r': return -5;
+            case 'q': return -9;
+            case 'k': return -100;
+            default: return 0;
+        }
+    }
+
+    public boolean isMaxTurn() {
+        return isMaxTurn;
     }
 }
