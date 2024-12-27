@@ -9,7 +9,7 @@ public class KillerSudokuSolver {
     private static Cage[] cages;
 
     public static void main(String[] args) {
-        System.out.println("Choose level of killer sudoku: ");
+        System.out.println("---------------Choose level of killer sudoku: (easy, medium, hard)-------------");
         Scanner scanner = new Scanner(System.in);
         String difficulty = scanner.nextLine();
         initializeGame(difficulty);
