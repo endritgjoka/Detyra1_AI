@@ -11,14 +11,14 @@ public class GameState {
 
     public void initializeMidGame() {
         String[] setup = {
-                "rnbqkbnr",
-                "pppppppp",
-                "........",
+                "r.bqk.nr",
+                "pppp.ppp",
+                "....p...",
+                "..n.....",
                 "....P...",
                 "...N....",
-                "...P....",
                 "PPPP.PPP",
-                "RNBQKBNR"
+                "RNBQKB.R"
         };
 
         for (int i = 0; i < 8; i++) {
