@@ -1,33 +1,64 @@
 package com.detyrat_ai.detyra2.killer_sudoku;
 
+import java.util.Scanner;
+
 public class KillerSudokuSolver {
 
     private static final int SIZE = 9;
     private static int[][] grid = new int[SIZE][SIZE];
-
-    private static final Cage[] cages = {
-            new Cage(new int[][]{{0, 0}, {0, 1}}, 10),
-            new Cage(new int[][]{{0, 2}, {1, 2}}, 9),
-            new Cage(new int[][]{{2, 0}, {2, 1}}, 10),
-            new Cage(new int[][]{{1, 3}, {0, 5}}, 5),
-            new Cage(new int[][]{{1, 0}, {2, 0}, {2, 1}}, 15),
-            new Cage(new int[][]{{0, 6}, {0, 7}, {0, 8}}, 20),
-            new Cage(new int[][]{{3, 3}, {3, 4}, {4, 3}}, 12),
-            new Cage(new int[][]{{5, 5}, {5, 6}, {5, 7}, {6, 7}}, 25),
-            new Cage(new int[][]{{7, 0}, {8, 0}, {8, 1}}, 12),
-            new Cage(new int[][]{{6, 6}, {6, 7}, {7, 6}}, 18),
-            new Cage(new int[][]{{3, 0}, {4, 0}, {5, 0}}, 17),
-            new Cage(new int[][]{{8, 8}}, 5),
-            new Cage(new int[][]{{4, 4}, {4, 5}}, 9),
-            new Cage(new int[][]{{0, 3}, {0, 4}, {1, 3}}, 13),
-
-    };
+    private static Cage[] cages;
 
     public static void main(String[] args) {
+        System.out.println("Choose level of killer sudoku: ");
+        Scanner scanner = new Scanner(System.in);
+        String difficulty = scanner.nextLine();
+        initializeGame(difficulty);
+
         if (solveSudoku(0, 0)) {
             printSolution();
         } else {
             System.out.println("No solution found!");
+        }
+    }
+
+    private static void initializeGame(String difficulty) {
+        switch (difficulty.toLowerCase()) {
+            case "easy":
+                System.out.println("Easy level: ");
+                cages = new Cage[]{
+                        new Cage(new int[][]{{0, 0}, {0, 1}}, 10),
+                        new Cage(new int[][]{{0, 2}, {1, 2}}, 9),
+                        new Cage(new int[][]{{1, 0}, {2, 0}}, 7),
+                        new Cage(new int[][]{{2, 1}, {2, 2}}, 11)
+                };
+                break;
+            case "medium":
+                System.out.println("Medium level: ");
+                cages = new Cage[]{
+                        new Cage(new int[][]{{0, 0}, {0, 1}}, 10),
+                        new Cage(new int[][]{{0, 2}, {1, 2}}, 9),
+                        new Cage(new int[][]{{2, 0}, {2, 1}}, 10),
+                        new Cage(new int[][]{{1, 3}, {0, 5}}, 5),
+                        new Cage(new int[][]{{0, 6}, {0, 7}, {0, 8}}, 20),
+                        new Cage(new int[][]{{4, 4}, {4, 5}}, 9),
+                };
+                grid[0][0] = 4;
+                break;
+
+            case "hard":
+                System.out.println("Hard level: ");
+                cages = new Cage[]{
+                        new Cage(new int[][]{{0, 0}, {0, 1}}, 5),
+                        new Cage(new int[][]{{0, 2}, {1, 2}}, 8),
+                        new Cage(new int[][]{{2, 0}, {2, 1}}, 9),
+                        new Cage(new int[][]{{3, 3}, {4, 4}}, 12),
+                        new Cage(new int[][]{{5, 5}, {5, 6}}, 7),
+                        new Cage(new int[][]{{7, 7}, {8, 8}}, 3),
+                };
+                break;
+
+            default:
+                throw new IllegalArgumentException("Invalid difficulty level. Choose easy, medium, or hard.");
         }
     }
 
@@ -43,7 +74,6 @@ public class KillerSudokuSolver {
         if (grid[row][col] != 0) {
             return solveSudoku(row, col + 1);
         }
-
 
         for (int num = 1; num <= SIZE; num++) {
             grid[row][col] = num;
@@ -83,12 +113,11 @@ public class KillerSudokuSolver {
         return true;
     }
 
-    // Check if the current grid respects the sum and uniqueness of cages
     private static boolean isValidCage(int row, int col) {
         for (Cage cage : cages) {
             boolean isInCage = false;
             int sum = 0;
-            int count = 0;  // To count how many filled cells are in this cage
+            int count = 0;
             for (int[] cell : cage.positions) {
                 if (cell[0] == row && cell[1] == col) {
                     isInCage = true;
@@ -99,20 +128,17 @@ public class KillerSudokuSolver {
                 }
             }
 
-            // If the current cell is part of the cage, check if sum exceeds target sum
             if (isInCage && sum > cage.targetSum) {
-                return false; // Sum exceeds the target sum for this cage
+                return false;
             }
 
-            // If all cells in the cage are filled, check if sum matches target sum
             if (isInCage && count == cage.positions.length && sum != cage.targetSum) {
-                return false; // Sum doesn't match the target sum for this cage
+                return false;
             }
         }
         return true;
     }
 
-    // Print the solved Sudoku grid
     private static void printSolution() {
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
@@ -122,10 +148,9 @@ public class KillerSudokuSolver {
         }
     }
 
-    // Define a Cage class to hold the coordinates and sum
     static class Cage {
-        int[][] positions;  // Stores row, col positions of each cell in the cage
-        int targetSum;      // The target sum for the cage
+        int[][] positions;
+        int targetSum;
 
         public Cage(int[][] positions, int targetSum) {
             this.positions = positions;
